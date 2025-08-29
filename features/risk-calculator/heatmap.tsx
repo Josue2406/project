@@ -1,11 +1,11 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useRiskContext } from '@/context/use-risk-context';
-import { generateHeatmapData, getRiskColorClasses } from '@/lib/risk-utils';
 import { QualitativeRiskInput } from '@/lib/risk-qualitative';
+import { generateHeatmapData, getRiskColorClasses } from '@/lib/risk-utils';
 
 const impactLabels = ['Insignif.', 'Menor', 'Moderado', 'Mayor', 'Catastr.'];
 const likelihoodLabels = ['Muy Prob.', 'Probable', 'Posible', 'Improb.', 'Muy Impr.'];
@@ -31,7 +31,6 @@ export function Heatmap() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {/* Legend */}
           <div className="flex flex-wrap gap-2 justify-center">
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 bg-green-500 rounded"></div>
@@ -51,10 +50,8 @@ export function Heatmap() {
             </div>
           </div>
 
-          {/* Heatmap Grid */}
           <div className="overflow-x-auto">
             <div className="min-w-[400px]">
-              {/* Header with Impact labels */}
               <div className="grid grid-cols-6 gap-1 mb-2">
                 <div></div>
                 {impactLabels.map((label, index) => (
@@ -64,15 +61,12 @@ export function Heatmap() {
                 ))}
               </div>
 
-              {/* Heatmap rows */}
               {heatmapData.map((row, rowIndex) => (
                 <div key={rowIndex} className="grid grid-cols-6 gap-1 mb-1">
-                  {/* Likelihood label */}
                   <div className="text-xs text-right font-medium p-2 flex items-center justify-end">
                     {likelihoodLabels[rowIndex]}
                   </div>
                   
-                  {/* Risk cells */}
                   {row.map((cell, cellIndex) => {
                     const isCurrentRisk = cell.likelihood === input.likelihood && cell.impact === input.impact;
                     const bgColor = getCellBackgroundColor(cell.color);
@@ -128,7 +122,6 @@ export function Heatmap() {
                 </div>
               ))}
 
-              {/* Axis labels */}
               <div className="grid grid-cols-6 gap-1 mt-4">
                 <div></div>
                 <div className="col-span-5 text-center text-sm font-medium text-muted-foreground">
@@ -141,7 +134,6 @@ export function Heatmap() {
             </div>
           </div>
 
-          {/* Current Risk Summary */}
           <div className="bg-muted/50 p-4 rounded-lg mt-6">
             <h4 className="font-medium mb-2 flex items-center gap-2">
               Tu Evaluación Actual

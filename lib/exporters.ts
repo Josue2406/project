@@ -1,14 +1,9 @@
-/**
- * Export utilities for risk data (CSV and JSON formats)
- */
 
+import { QualitativeRiskOutput } from './risk-qualitative';
+import { QuantitativeRiskOutput } from './risk-quantitative';
 import { RiskEntry } from './risk-utils';
-import { QualitativeRiskInput, QualitativeRiskOutput } from './risk-qualitative';
-import { QuantitativeRiskInput, QuantitativeRiskOutput } from './risk-quantitative';
 
-/**
- * Export risk register to CSV format
- */
+
 export function exportToCSV(risks: RiskEntry[]): string {
   const headers = [
     'ID',
@@ -61,9 +56,7 @@ export function exportToCSV(risks: RiskEntry[]): string {
     .join('\n');
 }
 
-/**
- * Export risk register to JSON format
- */
+
 export function exportToJSON(risks: RiskEntry[]): string {
   const exportData = {
     exportDate: new Date().toISOString(),
@@ -80,9 +73,7 @@ export function exportToJSON(risks: RiskEntry[]): string {
   return JSON.stringify(exportData, null, 2);
 }
 
-/**
- * Import risks from JSON format
- */
+
 export function importFromJSON(jsonString: string): RiskEntry[] {
   try {
     const data = JSON.parse(jsonString);
@@ -102,9 +93,7 @@ export function importFromJSON(jsonString: string): RiskEntry[] {
   }
 }
 
-/**
- * Download file with given content and filename
- */
+
 export function downloadFile(content: string, filename: string, contentType: string = 'text/plain'): void {
   const blob = new Blob([content], { type: contentType });
   const url = URL.createObjectURL(blob);
@@ -121,9 +110,7 @@ export function downloadFile(content: string, filename: string, contentType: str
   URL.revokeObjectURL(url);
 }
 
-/**
- * Helper functions to extract values from different risk types
- */
+
 function getInherentValue(risk: RiskEntry): string {
   if (risk.type === 'qualitative') {
     const result = risk.result as QualitativeRiskOutput;

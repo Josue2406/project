@@ -1,9 +1,7 @@
-/**
- * Common risk assessment utilities and types
- */
 
-import { QualitativeRiskOutput, QualitativeRiskInput } from './risk-qualitative';
-import { QuantitativeRiskOutput, QuantitativeRiskInput } from './risk-quantitative';
+
+import { QualitativeRiskInput, QualitativeRiskOutput } from './risk-qualitative';
+import { QuantitativeRiskInput, QuantitativeRiskOutput } from './risk-quantitative';
 
 export type RiskResult = 
   | (QualitativeRiskOutput & { type: 'qualitative'; input: QualitativeRiskInput })
@@ -26,9 +24,7 @@ export interface RiskEntry {
   notes?: string;
 }
 
-/**
- * CVSS-like severity mapping for vulnerability assessment
- */
+
 export interface CVSSMapping {
   score: number;
   severity: string;
@@ -69,17 +65,12 @@ export const CVSSMappings: CVSSMapping[] = [
   },
 ];
 
-/**
- * Get CVSS mapping by score
- */
+
 export function getCVSSMapping(score: number): CVSSMapping {
   const mapping = CVSSMappings.find(m => score <= m.score);
   return mapping || CVSSMappings[CVSSMappings.length - 1];
 }
 
-/**
- * Risk matrix coordinates for heatmap visualization
- */
 export interface HeatmapCell {
   likelihood: number;
   impact: number;
@@ -89,9 +80,7 @@ export interface HeatmapCell {
   count?: number; // For displaying multiple risks in same cell
 }
 
-/**
- * Generate 5x5 risk heatmap data
- */
+
 export function generateHeatmapData(risks: RiskEntry[] = []): HeatmapCell[][] {
   const matrix: HeatmapCell[][] = [];
   
@@ -127,9 +116,7 @@ export function generateHeatmapData(risks: RiskEntry[] = []): HeatmapCell[][] {
   return matrix;
 }
 
-/**
- * Map numeric risk score to rating
- */
+
 export function getRiskRating(riskScore: number): string {
   if (riskScore <= 5) return 'Bajo';
   if (riskScore <= 10) return 'Medio';
@@ -137,9 +124,7 @@ export function getRiskRating(riskScore: number): string {
   return 'Crítico';
 }
 
-/**
- * Map risk rating to color
- */
+
 export function getRiskColor(rating: string): string {
   switch (rating) {
     case 'Bajo': return 'green';
@@ -150,9 +135,7 @@ export function getRiskColor(rating: string): string {
   }
 }
 
-/**
- * Get Tailwind CSS classes for risk colors
- */
+
 export function getRiskColorClasses(color: string, variant: 'badge' | 'bg' | 'border' | 'text' = 'badge') {
   const colorMap = {
     green: {
@@ -190,16 +173,11 @@ export function getRiskColorClasses(color: string, variant: 'badge' | 'bg' | 'bo
   return colorMap[color as keyof typeof colorMap]?.[variant] || colorMap.gray[variant];
 }
 
-/**
- * Generate unique ID for risk entries
- */
 export function generateId(): string {
   return `risk_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
-/**
- * Format date for display
- */
+
 export function formatDate(date: Date): string {
   return new Intl.DateTimeFormat('es-ES', {
     day: '2-digit',
@@ -208,18 +186,14 @@ export function formatDate(date: Date): string {
   }).format(date);
 }
 
-/**
- * Calculate days until review date
- */
+
 export function getDaysUntilReview(reviewDate: Date): number {
   const today = new Date();
   const diffTime = reviewDate.getTime() - today.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
 
-/**
- * Get status color for risk entry status
- */
+
 export function getStatusColor(status: string): string {
   switch (status) {
     case 'active': return 'red';
@@ -230,9 +204,7 @@ export function getStatusColor(status: string): string {
   }
 }
 
-/**
- * Get status label in Spanish
- */
+
 export function getStatusLabel(status: string): string {
   switch (status) {
     case 'active': return 'Activo';

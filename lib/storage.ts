@@ -1,6 +1,4 @@
-/**
- * Local storage utilities for risk data persistence
- */
+
 
 import { RiskEntry } from './risk-utils';
 
@@ -9,9 +7,7 @@ const STORAGE_KEYS = {
   USER_PREFERENCES: 'risk-calculator-preferences:v1',
 } as const;
 
-/**
- * Save risk register to localStorage
- */
+
 export function saveRiskRegister(risks: RiskEntry[]): void {
   try {
     const serializedRisks = risks.map(risk => ({
@@ -28,9 +24,6 @@ export function saveRiskRegister(risks: RiskEntry[]): void {
   }
 }
 
-/**
- * Load risk register from localStorage
- */
 export function loadRiskRegister(): RiskEntry[] {
   try {
     const stored = localStorage.getItem(STORAGE_KEYS.RISK_REGISTER);
@@ -49,9 +42,7 @@ export function loadRiskRegister(): RiskEntry[] {
   }
 }
 
-/**
- * Clear risk register from localStorage
- */
+
 export function clearRiskRegister(): void {
   try {
     localStorage.removeItem(STORAGE_KEYS.RISK_REGISTER);
@@ -61,9 +52,7 @@ export function clearRiskRegister(): void {
   }
 }
 
-/**
- * Save user preferences
- */
+
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'system';
   defaultRiskThresholds: {
@@ -94,9 +83,7 @@ export function loadUserPreferences(): UserPreferences | null {
   }
 }
 
-/**
- * Check localStorage availability
- */
+
 export function isStorageAvailable(): boolean {
   try {
     const test = '__storage_test__';
@@ -108,9 +95,7 @@ export function isStorageAvailable(): boolean {
   }
 }
 
-/**
- * Get storage usage information
- */
+
 export function getStorageInfo(): { used: number; total: number; available: number } {
   if (!isStorageAvailable()) {
     return { used: 0, total: 0, available: 0 };
@@ -130,9 +115,7 @@ export function getStorageInfo(): { used: number; total: number; available: numb
   return { used, total, available };
 }
 
-/**
- * Create sample/demo risk data
- */
+
 export function createSampleRiskData(): RiskEntry[] {
   const now = new Date();
   const futureDate = new Date();

@@ -1,14 +1,18 @@
 'use client';
 
-import { useEffect } from 'react';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+
 import { Navbar } from '@/components/nav';
-import { 
-  RegisterTable, 
-  RegisterForm, 
-  RegisterActions 
-} from '@/features/risk-register';
 import { useRiskContext } from '@/context/use-risk-context';
+import {
+  RegisterActions,
+  RegisterForm,
+  RegisterTable
+} from '@/features/risk-register';
 import { loadRiskRegister } from '@/lib/storage';
+import { useEffect } from 'react';
 
 export default function RegistroPage() {
   const { dispatch } = useRiskContext();

@@ -1,16 +1,16 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-import { AlertTriangle, TrendingDown, TrendingUp, Save, Download, Euro } from 'lucide-react';
 import { useRiskContext } from '@/context/use-risk-context';
-import { getRiskColorClasses, generateId, formatDate } from '@/lib/risk-utils';
+import { downloadFile, exportToCSV } from '@/lib/exporters';
 import { formatCurrency, formatPercentage } from '@/lib/risk-quantitative';
-import { saveRiskRegister, loadRiskRegister } from '@/lib/storage';
-import { exportToCSV, exportToJSON, downloadFile } from '@/lib/exporters';
+import { generateId, getRiskColorClasses } from '@/lib/risk-utils';
+import { loadRiskRegister, saveRiskRegister } from '@/lib/storage';
+import { AlertTriangle, Download, Euro, Save, TrendingDown, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function ResultsPanel() {
@@ -94,7 +94,6 @@ export function ResultsPanel() {
 
   return (
     <div className="space-y-6">
-      {/* Main Results Card */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -106,14 +105,12 @@ export function ResultsPanel() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Asset Info */}
           <div className="bg-muted/50 p-4 rounded-lg">
             <h4 className="font-medium mb-2">Información del Activo</h4>
             <p className="text-sm"><span className="font-medium">Activo:</span> {currentResult.input.assetName}</p>
             <p className="text-sm"><span className="font-medium">Amenaza:</span> {currentResult.input.threatDescription}</p>
           </div>
 
-          {/* Risk Comparison */}
           <div className="grid md:grid-cols-2 gap-4">
             <Card>
               <CardHeader className="pb-3">
@@ -125,12 +122,12 @@ export function ResultsPanel() {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold">
-                      {isQualitative ? 
-                        currentResult.inherentRisk : 
-                        formatCurrency(currentResult.inherentALE)
-                      }
-                    </span>
+                   <span className="text-2xl font-bold">
+  {currentResult.type === "qualitative"
+    ? currentResult.inherentRisk
+    : formatCurrency(currentResult.inherentALE)}
+</span>
+
                     <Badge className={getRiskColorClasses(currentResult.inherentColor)}>
                       {currentResult.inherentRating}
                     </Badge>
@@ -178,7 +175,6 @@ export function ResultsPanel() {
             </Card>
           </div>
 
-          {/* Risk Reduction */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="font-medium">Reducción de Riesgo</span>
@@ -192,8 +188,10 @@ export function ResultsPanel() {
             </p>
           </div>
 
-          {/* Quantitative specific metrics */}
-          {!isQualitative && (
+
+          
+            {currentResult.type !== "qualitative" && (
+  
             <>
               <Separator />
               <div className="grid md:grid-cols-2 gap-4">
@@ -228,7 +226,6 @@ export function ResultsPanel() {
         </CardContent>
       </Card>
 
-      {/* Recommendations */}
       <Card>
         <CardHeader>
           <CardTitle>Acciones Recomendadas</CardTitle>
@@ -248,7 +245,6 @@ export function ResultsPanel() {
         </CardContent>
       </Card>
 
-      {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3">
         <Button onClick={handleSaveToRegister} className="flex-1">
           <Save className="mr-2 h-4 w-4" />

@@ -1,19 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Download, Upload, Trash2, FileText, Database } from 'lucide-react';
 import { useRiskContext } from '@/context/use-risk-context';
-import { exportToCSV, exportToJSON, downloadFile, importFromJSON } from '@/lib/exporters';
-import { saveRiskRegister, clearRiskRegister, createSampleRiskData } from '@/lib/storage';
+import { downloadFile, exportToCSV, exportToJSON, importFromJSON } from '@/lib/exporters';
+import { clearRiskRegister, createSampleRiskData, saveRiskRegister } from '@/lib/storage';
+import { Database, Download, FileText, Trash2, Upload } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { useRef } from 'react';
 
 export function RegisterActions() {
   const { state, dispatch } = useRiskContext();
@@ -98,7 +97,6 @@ export function RegisterActions() {
 
   return (
     <div className="flex flex-col sm:flex-row gap-2">
-      {/* Export Dialog */}
       <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
         <DialogTrigger asChild>
           <Button variant="outline">
@@ -151,7 +149,6 @@ export function RegisterActions() {
         </DialogContent>
       </Dialog>
 
-      {/* Import Dialog */}
       <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
         <DialogTrigger asChild>
           <Button variant="outline">
@@ -193,7 +190,6 @@ export function RegisterActions() {
         </DialogContent>
       </Dialog>
 
-      {/* Clear Register Dialog */}
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button variant="outline" className="text-red-600 hover:text-red-700">
@@ -223,7 +219,6 @@ export function RegisterActions() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Load Sample Data (only show if register is empty) */}
       {state.register.length === 0 && (
         <Button variant="outline" onClick={handleLoadSampleData}>
           <Database className="mr-2 h-4 w-4" />

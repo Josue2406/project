@@ -1,10 +1,10 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Calculator, FileText, Home, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Shield, Calculator, FileText, Home } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './theme-toggle';
 
 const navigationItems = [
@@ -73,7 +73,6 @@ export function Navbar() {
           <div className="flex items-center space-x-4">
             <ThemeToggle />
             
-            {/* Mobile navigation */}
             <div className="md:hidden flex items-center space-x-1">
               {navigationItems.map((item) => {
                 const Icon = item.icon;

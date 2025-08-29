@@ -1,13 +1,10 @@
-/**
- * Qualitative risk assessment utilities
- * Implements likelihood x impact methodology aligned with ISO 27005
- */
+
 
 export interface QualitativeRiskInput {
   assetName: string;
   threatDescription: string;
   likelihood: number; // 1-5 scale
-  impact: number; // 1-5 scale
+  impact: number; //1-5 scale
   controlEffectiveness: number; // 0-100 percentage
   detectionCapability: number; // 1-5 scale
 }
@@ -23,17 +20,12 @@ export interface QualitativeRiskOutput {
   recommendedActions: string[];
 }
 
-/**
- * Calculate inherent risk score (before controls)
- */
+
 export function calculateInherentRisk(likelihood: number, impact: number): number {
   return likelihood * impact;
 }
 
-/**
- * Calculate residual risk score (after controls)
- * Considers control effectiveness and detection capability
- */
+
 export function calculateResidualRisk(
   inherentRisk: number,
   controlEffectiveness: number,
@@ -51,9 +43,7 @@ export function calculateResidualRisk(
   return Math.max(inherentRisk * (1 - totalReduction), 1); // Minimum risk score of 1
 }
 
-/**
- * Complete qualitative risk assessment
- */
+
 export function assessQualitativeRisk(input: QualitativeRiskInput): QualitativeRiskOutput {
   const inherentRisk = calculateInherentRisk(input.likelihood, input.impact);
   const residualRisk = calculateResidualRisk(
@@ -84,9 +74,7 @@ export function assessQualitativeRisk(input: QualitativeRiskInput): QualitativeR
   };
 }
 
-/**
- * Map numeric risk score to rating
- */
+
 function getRiskRating(riskScore: number): string {
   if (riskScore <= 5) return 'Bajo';
   if (riskScore <= 10) return 'Medio';
@@ -94,9 +82,6 @@ function getRiskRating(riskScore: number): string {
   return 'Crítico';
 }
 
-/**
- * Map risk rating to color class
- */
 function getRiskColor(rating: string): string {
   switch (rating) {
     case 'Bajo': return 'green';
@@ -107,10 +92,7 @@ function getRiskColor(rating: string): string {
   }
 }
 
-/**
- * Generate recommended actions based on risk level
- * Aligned with ISO 27005 risk treatment options
- */
+
 function getRecommendedActions(rating: string, score: number): string[] {
   switch (rating) {
     case 'Bajo':
@@ -148,9 +130,7 @@ function getRecommendedActions(rating: string, score: number): string[] {
   }
 }
 
-/**
- * Get likelihood description
- */
+
 export function getLikelihoodDescription(level: number): string {
   const descriptions = [
     '', // 0 is not used
@@ -163,9 +143,6 @@ export function getLikelihoodDescription(level: number): string {
   return descriptions[level] || 'No definido';
 }
 
-/**
- * Get impact description  
- */
 export function getImpactDescription(level: number): string {
   const descriptions = [
     '', // 0 is not used

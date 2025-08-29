@@ -1,20 +1,20 @@
 'use client';
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Calculator, Euro, Info } from 'lucide-react';
-import { QuantitativeRiskInput, assessQuantitativeRisk, formatCurrency } from '@/lib/risk-quantitative';
+import { Textarea } from '@/components/ui/textarea';
 import { useRiskContext } from '@/context/use-risk-context';
+import { QuantitativeRiskInput, assessQuantitativeRisk, formatCurrency } from '@/lib/risk-quantitative';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Calculator, Euro, Info } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import * as z from 'zod';
 
 const quantitativeSchema = z.object({
   assetName: z.string().min(1, 'El nombre del activo es obligatorio'),
@@ -84,7 +84,6 @@ export function QuantitativeForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Asset Information */}
         <div className="grid md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -148,7 +147,6 @@ export function QuantitativeForm() {
           )}
         />
 
-        {/* Risk Factors */}
         <div className="grid md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
@@ -209,7 +207,6 @@ export function QuantitativeForm() {
           />
         </div>
 
-        {/* Control Information */}
         <div className="grid md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
@@ -304,7 +301,6 @@ export function QuantitativeForm() {
           )}
         />
 
-        {/* Preview */}
         <Card className="bg-muted/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">

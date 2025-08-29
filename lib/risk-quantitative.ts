@@ -1,7 +1,3 @@
-/**
- * Quantitative risk assessment utilities
- * Implements SLE, ALE, and other quantitative methodologies
- */
 
 export interface QuantitativeRiskInput {
   assetName: string;
@@ -29,25 +25,15 @@ export interface QuantitativeRiskOutput {
   residualColor: string;
 }
 
-/**
- * Calculate Single Loss Expectancy (SLE)
- * SLE = Asset Value × Exposure Factor
- */
 export function calculateSLE(assetValue: number, exposureFactor: number): number {
   return assetValue * (exposureFactor / 100);
 }
 
-/**
- * Calculate Annualized Loss Expectancy (ALE)
- * ALE = SLE × Annual Rate of Occurrence
- */
 export function calculateALE(sle: number, aro: number): number {
   return sle * aro;
 }
 
-/**
- * Calculate residual risk after controls
- */
+
 export function calculateResidualQuantitativeRisk(
   inherentALE: number,
   controlEffectiveness: number,
@@ -65,10 +51,7 @@ export function calculateResidualQuantitativeRisk(
   return inherentALE * (1 - totalReduction);
 }
 
-/**
- * Calculate Return on Investment for controls
- * ROI = (Risk Reduction - Control Cost) / Control Cost
- */
+
 export function calculateControlROI(
   inherentALE: number,
   residualALE: number,
@@ -81,9 +64,7 @@ export function calculateControlROI(
   return (netBenefit / controlCost) * 100;
 }
 
-/**
- * Complete quantitative risk assessment
- */
+
 export function assessQuantitativeRisk(input: QuantitativeRiskInput): QuantitativeRiskOutput {
   // Calculate inherent risk
   const inherentSLE = calculateSLE(input.assetValue, input.exposureFactor);
@@ -131,10 +112,7 @@ export function assessQuantitativeRisk(input: QuantitativeRiskInput): Quantitati
   };
 }
 
-/**
- * Map ALE to risk rating based on organizational thresholds
- * These thresholds can be customized based on organization size and risk appetite
- */
+
 function getQuantitativeRiskRating(ale: number): string {
   if (ale < 10000) return 'Bajo';
   if (ale < 50000) return 'Medio';  
@@ -142,9 +120,7 @@ function getQuantitativeRiskRating(ale: number): string {
   return 'Crítico';
 }
 
-/**
- * Map risk rating to color
- */
+
 function getRiskColor(rating: string): string {
   switch (rating) {
     case 'Bajo': return 'green';
@@ -155,9 +131,7 @@ function getRiskColor(rating: string): string {
   }
 }
 
-/**
- * Generate recommendations based on quantitative analysis
- */
+
 function getQuantitativeRecommendations(
   rating: string,
   controlROI: number,
@@ -206,9 +180,7 @@ function getQuantitativeRecommendations(
   return recommendations;
 }
 
-/**
- * Format currency values for display
- */
+
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('es-ES', {
     style: 'currency',
@@ -218,9 +190,7 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-/**
- * Format percentage values
- */
+
 export function formatPercentage(value: number): string {
   return `${value.toFixed(1)}%`;
 }

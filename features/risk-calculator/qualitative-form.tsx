@@ -1,21 +1,20 @@
 'use client';
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Calculator, Info } from 'lucide-react';
-import { QualitativeRiskInput, assessQualitativeRisk, getLikelihoodDescription, getImpactDescription } from '@/lib/risk-qualitative';
+import { Textarea } from '@/components/ui/textarea';
 import { useRiskContext } from '@/context/use-risk-context';
+import { QualitativeRiskInput, assessQualitativeRisk, getImpactDescription, getLikelihoodDescription } from '@/lib/risk-qualitative';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Calculator, Info } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import * as z from 'zod';
 
 const qualitativeSchema = z.object({
   assetName: z.string().min(1, 'El nombre del activo es obligatorio').max(100, 'Máximo 100 caracteres'),
@@ -80,7 +79,6 @@ export function QualitativeForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Asset Information */}
         <div className="grid md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -124,7 +122,6 @@ export function QualitativeForm() {
           />
         </div>
 
-        {/* Risk Factors */}
         <div className="grid md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
@@ -209,7 +206,6 @@ export function QualitativeForm() {
           </Card>
         </div>
 
-        {/* Control Effectiveness */}
         <div className="grid md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
@@ -282,7 +278,6 @@ export function QualitativeForm() {
           />
         </div>
 
-        {/* Preview */}
         <Card className="bg-muted/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">

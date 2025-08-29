@@ -1,19 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Eye, Edit, Trash2, Search, Filter, Calendar } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRiskContext } from '@/context/use-risk-context';
-import { RiskEntry, getRiskColorClasses, getStatusLabel, getStatusColor, formatDate, getDaysUntilReview } from '@/lib/risk-utils';
 import { formatCurrency } from '@/lib/risk-quantitative';
+import { RiskEntry, formatDate, getDaysUntilReview, getRiskColorClasses, getStatusColor, getStatusLabel } from '@/lib/risk-utils';
 import { saveRiskRegister } from '@/lib/storage';
+import { Calendar, Edit, Eye, Filter, Search, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export function RegisterTable() {
@@ -61,13 +61,15 @@ export function RegisterTable() {
     toast.success(`Estado actualizado a ${getStatusLabel(newStatus)}`);
   };
 
-  const getRiskValue = (risk: RiskEntry): string => {
-    if (risk.type === 'qualitative') {
-      return risk.result.residualRisk.toFixed(1);
-    } else {
-      return formatCurrency((risk.result as any).residualALE);
-    }
-  };
+ const getRiskValue = (risk: RiskEntry): string => {
+  if ("residualRisk" in risk.result) {
+    // Cualitativo
+    return risk.result.residualRisk.toFixed(1);
+  }
+  // Cuantitativo
+  return formatCurrency(risk.result.residualALE);
+};
+
 
   if (state.register.length === 0) {
     return (
@@ -87,7 +89,6 @@ export function RegisterTable() {
 
   return (
     <div className="space-y-4">
-      {/* Filters */}
       <Card>
         <CardContent className="p-4">
           <div className="flex flex-col md:flex-row gap-4">
@@ -129,12 +130,10 @@ export function RegisterTable() {
         </CardContent>
       </Card>
 
-      {/* Results Summary */}
       <div className="text-sm text-muted-foreground">
         Mostrando {filteredRisks.length} de {state.register.length} riesgos registrados
       </div>
 
-      {/* Table */}
       <Card>
         <CardHeader>
           <CardTitle>Registro de Riesgos</CardTitle>
@@ -263,9 +262,9 @@ export function RegisterTable() {
                               <AlertDialogHeader>
                                 <AlertDialogTitle>¿Eliminar riesgo?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Esta acción no se puede deshacer. El riesgo "{risk.name}" 
-                                  será eliminado permanentemente del registro.
-                                </AlertDialogDescription>
+  {`Esta acción no se puede deshacer. El riesgo "${risk.name}" será eliminado permanentemente del registro.`}
+</AlertDialogDescription>
+
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
@@ -297,7 +296,6 @@ function RiskDetails({ risk }: { risk: RiskEntry }) {
   
   return (
     <div className="space-y-6">
-      {/* Basic Information */}
       <div className="grid md:grid-cols-2 gap-4">
         <div>
           <h4 className="font-medium mb-2">Información General</h4>
@@ -323,13 +321,11 @@ function RiskDetails({ risk }: { risk: RiskEntry }) {
         </div>
       </div>
 
-      {/* Threat Description */}
       <div>
         <h4 className="font-medium mb-2">Descripción de la Amenaza</h4>
         <p className="text-sm bg-muted/50 p-3 rounded">{risk.threatDescription}</p>
       </div>
 
-      {/* Risk Assessment Results */}
       <div>
         <h4 className="font-medium mb-2">Resultados de la Evaluación</h4>
         <div className="grid md:grid-cols-2 gap-4">
@@ -337,14 +333,13 @@ function RiskDetails({ risk }: { risk: RiskEntry }) {
             <h5 className="font-medium text-sm mb-2">Riesgo Inherente</h5>
             <div className="flex items-center gap-2">
               <span className="text-lg font-bold">
-                {isQualitative ? 
-                  risk.result.inherentRisk : 
-                  formatCurrency((risk.result as any).inherentALE)
-                }
-              </span>
-              <Badge className={getRiskColorClasses(risk.result.inherentColor)}>
-                {risk.result.inherentRating}
-              </Badge>
+          {"inherentRisk" in risk.result
+            ? risk.result.inherentRisk
+            : formatCurrency(risk.result.inherentALE)}
+        </span>
+        <Badge className={getRiskColorClasses(risk.result.inherentColor)}>
+          {risk.result.inherentRating}
+        </Badge>
             </div>
           </div>
 
@@ -352,14 +347,13 @@ function RiskDetails({ risk }: { risk: RiskEntry }) {
             <h5 className="font-medium text-sm mb-2">Riesgo Residual</h5>
             <div className="flex items-center gap-2">
               <span className="text-lg font-bold">
-                {isQualitative ? 
-                  risk.result.residualRisk.toFixed(1) : 
-                  formatCurrency((risk.result as any).residualALE)
-                }
-              </span>
-              <Badge className={getRiskColorClasses(risk.result.residualColor)}>
-                {risk.result.residualRating}
-              </Badge>
+          {"residualRisk" in risk.result
+            ? risk.result.residualRisk.toFixed(1)
+            : formatCurrency(risk.result.residualALE)}
+        </span>
+        <Badge className={getRiskColorClasses(risk.result.residualColor)}>
+          {risk.result.residualRating}
+        </Badge>
             </div>
           </div>
         </div>
@@ -374,7 +368,6 @@ function RiskDetails({ risk }: { risk: RiskEntry }) {
         </div>
       </div>
 
-      {/* Recommendations */}
       <div>
         <h4 className="font-medium mb-2">Acciones Recomendadas</h4>
         <ul className="space-y-1 text-sm">
@@ -387,7 +380,6 @@ function RiskDetails({ risk }: { risk: RiskEntry }) {
         </ul>
       </div>
 
-      {/* Notes */}
       {risk.notes && (
         <div>
           <h4 className="font-medium mb-2">Notas</h4>
