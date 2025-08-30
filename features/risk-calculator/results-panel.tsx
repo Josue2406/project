@@ -182,7 +182,10 @@ export function ResultsPanel() {
                 {formatPercentage(currentResult.riskReduction)}
               </span>
             </div>
-            <Progress value={currentResult.riskReduction} className="h-2" />
+            <Progress 
+              value={Math.min(100, Math.max(0, currentResult.riskReduction))} 
+              className="h-2" 
+            />
             <p className="text-sm text-muted-foreground">
               Los controles implementados reducen el riesgo en un {formatPercentage(currentResult.riskReduction)}
             </p>

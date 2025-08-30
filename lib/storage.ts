@@ -1,4 +1,4 @@
-
+'use client';
 
 import { RiskEntry } from './risk-utils';
 
@@ -7,9 +7,17 @@ const STORAGE_KEYS = {
   USER_PREFERENCES: 'risk-calculator-preferences:v1',
 } as const;
 
+// Helper function to safely access localStorage
+function getLocalStorage() {
+  if (typeof window === 'undefined') return null;
+  return window.localStorage;
+}
 
 export function saveRiskRegister(risks: RiskEntry[]): void {
   try {
+    const storage = getLocalStorage();
+    if (!storage) return;
+    
     const serializedRisks = risks.map(risk => ({
       ...risk,
       createdAt: risk.createdAt.toISOString(),
@@ -17,7 +25,7 @@ export function saveRiskRegister(risks: RiskEntry[]): void {
       reviewDate: risk.reviewDate.toISOString(),
     }));
     
-    localStorage.setItem(STORAGE_KEYS.RISK_REGISTER, JSON.stringify(serializedRisks));
+    storage.setItem(STORAGE_KEYS.RISK_REGISTER, JSON.stringify(serializedRisks));
   } catch (error) {
     console.error('Error saving risk register to localStorage:', error);
     throw new Error('No se pudo guardar el registro de riesgos');
@@ -26,7 +34,10 @@ export function saveRiskRegister(risks: RiskEntry[]): void {
 
 export function loadRiskRegister(): RiskEntry[] {
   try {
-    const stored = localStorage.getItem(STORAGE_KEYS.RISK_REGISTER);
+    const storage = getLocalStorage();
+    if (!storage) return [];
+    
+    const stored = storage.getItem(STORAGE_KEYS.RISK_REGISTER);
     if (!stored) return [];
     
     const parsed = JSON.parse(stored);
@@ -42,10 +53,12 @@ export function loadRiskRegister(): RiskEntry[] {
   }
 }
 
-
 export function clearRiskRegister(): void {
   try {
-    localStorage.removeItem(STORAGE_KEYS.RISK_REGISTER);
+    const storage = getLocalStorage();
+    if (!storage) return;
+    
+    storage.removeItem(STORAGE_KEYS.RISK_REGISTER);
   } catch (error) {
     console.error('Error clearing risk register from localStorage:', error);
     throw new Error('No se pudo limpiar el registro de riesgos');
@@ -67,7 +80,10 @@ export interface UserPreferences {
 
 export function saveUserPreferences(preferences: UserPreferences): void {
   try {
-    localStorage.setItem(STORAGE_KEYS.USER_PREFERENCES, JSON.stringify(preferences));
+    const storage = getLocalStorage();
+    if (!storage) return;
+    
+    storage.setItem(STORAGE_KEYS.USER_PREFERENCES, JSON.stringify(preferences));
   } catch (error) {
     console.error('Error saving user preferences:', error);
   }
@@ -75,7 +91,10 @@ export function saveUserPreferences(preferences: UserPreferences): void {
 
 export function loadUserPreferences(): UserPreferences | null {
   try {
-    const stored = localStorage.getItem(STORAGE_KEYS.USER_PREFERENCES);
+    const storage = getLocalStorage();
+    if (!storage) return null;
+    
+    const stored = storage.getItem(STORAGE_KEYS.USER_PREFERENCES);
     return stored ? JSON.parse(stored) : null;
   } catch (error) {
     console.error('Error loading user preferences:', error);
@@ -86,9 +105,12 @@ export function loadUserPreferences(): UserPreferences | null {
 
 export function isStorageAvailable(): boolean {
   try {
+    const storage = getLocalStorage();
+    if (!storage) return false;
+    
     const test = '__storage_test__';
-    localStorage.setItem(test, 'test');
-    localStorage.removeItem(test);
+    storage.setItem(test, 'test');
+    storage.removeItem(test);
     return true;
   } catch {
     return false;
@@ -101,10 +123,13 @@ export function getStorageInfo(): { used: number; total: number; available: numb
     return { used: 0, total: 0, available: 0 };
   }
 
+  const storage = getLocalStorage();
+  if (!storage) return { used: 0, total: 0, available: 0 };
+
   let used = 0;
-  for (let key in localStorage) {
-    if (localStorage.hasOwnProperty(key)) {
-      used += localStorage[key].length + key.length;
+  for (let key in storage) {
+    if (storage.hasOwnProperty(key)) {
+      used += storage[key].length + key.length;
     }
   }
 

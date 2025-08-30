@@ -1,3 +1,4 @@
+'use client';
 
 import { QualitativeRiskOutput } from './risk-qualitative';
 import { QuantitativeRiskOutput } from './risk-quantitative';
@@ -95,6 +96,12 @@ export function importFromJSON(jsonString: string): RiskEntry[] {
 
 
 export function downloadFile(content: string, filename: string, contentType: string = 'text/plain'): void {
+  // Only run in browser environment
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    console.warn('downloadFile called in non-browser environment');
+    return;
+  }
+
   const blob = new Blob([content], { type: contentType });
   const url = URL.createObjectURL(blob);
   
