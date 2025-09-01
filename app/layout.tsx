@@ -1,9 +1,10 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/sonner';
 import { RiskProvider } from '@/context/risk-context';
+import type { Metadata } from 'next';
+import { ThemeProvider } from 'next-themes';
+import { Inter } from 'next/font/google';
+import './faro-client'; // Asegúrate de importar para inicializar Faro en el cliente
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
