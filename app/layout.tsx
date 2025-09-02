@@ -1,3 +1,4 @@
+import TestErrorButton from '@/components/TestErrorButton';
 import { Toaster } from '@/components/ui/sonner';
 import { RiskProvider } from '@/context/risk-context';
 import type { Metadata } from 'next';
@@ -32,6 +33,7 @@ export default function RootLayout({
           <RiskProvider>
             {children}
             <Toaster />
+             <TestErrorButton /> {/* Botón de prueba */}
           </RiskProvider>
         </ThemeProvider>
       </body>
