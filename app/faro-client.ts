@@ -1,8 +1,10 @@
 // app/faro-client.ts (use client)
 'use client';
 
+import { ReactIntegration, createReactRouterV6DataOptions } from '@grafana/faro-react';
 import { getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
+import { matchRoutes } from 'react-router-dom';
 
 if (typeof window !== 'undefined') {
   const FARO_URL = process.env.NEXT_PUBLIC_FARO_URL;
@@ -27,8 +29,12 @@ if (typeof window !== 'undefined') {
         instrumentations: [
           ...getWebInstrumentations(),
           new TracingInstrumentation(),
+          new ReactIntegration({
+        router: createReactRouterV6DataOptions({ matchRoutes }),
+      }),
         ],
       });
+    
 
       console.log('✅ Faro inicializado correctamente');
     } catch (err) {
