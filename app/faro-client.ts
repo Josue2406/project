@@ -5,17 +5,34 @@ import { getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
 
 if (typeof window !== 'undefined') {
-  console.log('Initializing Faro...', process.env.NEXT_PUBLIC_FARO_URL);
-  initializeFaro({
-    url: process.env.NEXT_PUBLIC_FARO_URL!,  // URL del Beacon de Grafana
-    app: {
-      name: 'risk-calculator-next',  // Nombre de tu app
-      version: process.env.NEXT_PUBLIC_APP_VERSION || 'dev',  // La versión de tu app
-      environment: process.env.NEXT_PUBLIC_APP_ENV || 'production',  // El ambiente (producción/desarrollo)
-    },
-    instrumentations: [
-      ...getWebInstrumentations(),  // Instrumentación automática para métricas y logs
-      new TracingInstrumentation(),  // Instrumentación para el seguimiento de trazas
-    ],
-  });
+  const FARO_URL = process.env.NEXT_PUBLIC_FARO_URL;
+  const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || 'dev';
+  const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV || 'production';
+
+  if (!FARO_URL) {
+    console.warn('⚠️ NEXT_PUBLIC_FARO_URL no está definida. Faro no se inicializará.');
+  } else {
+    try {
+      console.log('🌐 Inicializando Faro Web SDK...');
+      console.log('Faro URL:', FARO_URL);
+      console.log('App version:', APP_VERSION, '| Environment:', APP_ENV);
+
+      initializeFaro({
+        url: FARO_URL,
+        app: {
+          name: 'risk-calculator-next',
+          version: APP_VERSION,
+          environment: APP_ENV,
+        },
+        instrumentations: [
+          ...getWebInstrumentations(),
+          new TracingInstrumentation(),
+        ],
+      });
+
+      console.log('✅ Faro inicializado correctamente');
+    } catch (err) {
+      console.error('❌ Error al inicializar Faro:', err);
+    }
+  }
 }
