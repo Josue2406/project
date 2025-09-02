@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google';
 import './faro-client'; // Asegúrate de importar para inicializar Faro en el cliente
 import './globals.css';
 
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -18,8 +19,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  //lang="es" suppressHydrationWarning
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html >
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"

@@ -1,19 +1,21 @@
+// app/faro-client.ts (use client)
+'use client';
+
 import { getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
 
+if (typeof window !== 'undefined') {
+  console.log('Initializing Faro...', process.env.NEXT_PUBLIC_FARO_URL);
   initializeFaro({
-    url: 'https://faro-collector-prod-us-east-2.grafana.net/collect/586d6d0b0e0ee75a99dba92a41709227',
+    url: process.env.NEXT_PUBLIC_FARO_URL!,  // URL del Beacon de Grafana
     app: {
-      name: 'Calculadora de riesgos',
-      version: '1.0.0',
-      environment: 'production'
+      name: 'risk-calculator-next',  // Nombre de tu app
+      version: process.env.NEXT_PUBLIC_APP_VERSION || 'dev',  // La versión de tu app
+      environment: process.env.NEXT_PUBLIC_APP_ENV || 'production',  // El ambiente (producción/desarrollo)
     },
-    
     instrumentations: [
-      // Mandatory, omits default instrumentations otherwise.
-      ...getWebInstrumentations(),
-
-      // Tracing package to get end-to-end visibility for HTTP requests.
-      new TracingInstrumentation(),
+      ...getWebInstrumentations(),  // Instrumentación automática para métricas y logs
+      new TracingInstrumentation(),  // Instrumentación para el seguimiento de trazas
     ],
   });
+}
